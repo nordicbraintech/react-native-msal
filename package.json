@@ -1,5 +1,5 @@
 {
-  "name": "react-native-msal",
+  "name": "@nbt-private/react-native-msal",
   "version": "1.0.3",
   "description": "React Native wrapper for iOS and Android",
   "main": "build/index.js",

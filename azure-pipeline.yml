@@ -1,0 +1,97 @@
+trigger:
+  - nbt-prod
+
+pool:
+  vmImage: "macOS-12"
+
+variables:
+  - name: nodeVersion
+    value: "14.19.0"
+  - group: "NbtRegistry"
+
+stages:
+  - stage: BuildJs
+    displayName: BuildJs
+    jobs:
+      - job: Build
+        steps:
+          - checkout: self
+            persistCredentials: true
+            clean: true
+
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(nodeVersion)
+            displayName: "Install Node"
+
+          - task: Cache@2
+            inputs:
+              key: 'node | "$(Agent.OS)" | yarn.lock'
+              restoreKeys: |
+                node | "$(Agent.OS)"
+              path: node_modules
+            displayName: Cache node modules
+
+          - script: |
+              yarn install --network-concurrency 1
+            displayName: "Install node modules"
+
+          - script: |
+              yarn lint
+            displayName: "Lint"
+
+          - script: |
+              yarn test --passWithNoTests
+            displayName: "Unit tests Typescript"
+
+          - script: |
+              yarn audit || echo "Has Open source vulnerabilities"
+            displayName: "Open source vulnerabilities"
+
+  - stage: Publish
+    displayName: Publish package
+    condition: |
+      and
+      (
+        or
+        (
+          eq(variables['Build.Reason'], 'IndividualCI'),
+          eq(variables['Build.Reason'], 'Manual')
+        ),
+        eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+        succeeded('BuildJs')
+      )
+    jobs:
+      - job: Publish
+        steps:
+          - checkout: self
+            persistCredentials: true
+            clean: true
+
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(nodeVersion)
+            displayName: "Install Node"
+
+          - task: Cache@2
+            inputs:
+              key: 'node | "$(Agent.OS)" | yarn.lock'
+              restoreKeys: |
+                node | "$(Agent.OS)"
+              path: node_modules
+            displayName: Cache node modules
+
+          - script: ./scripts/prepare-npmrc.sh
+            displayName: "Prepare .npmrc"
+            env:
+              PRIVATE_REGISTRY_URL: $(nbtPrivateRegistryUrl)
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
+
+          - script: |
+              yarn install --network-concurrency 1
+            displayName: "Install node modules"
+
+          - script: npm publish
+            displayName: "Publish package"
