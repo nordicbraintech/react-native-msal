@@ -1,15 +1,15 @@
 import { PublicClientApplication as MSALPublicClientApplication } from '@azure/msal-browser';
 
-import type {
-  MSALConfiguration,
-  MSALInteractiveParams,
-  MSALSilentParams,
-  MSALAccount,
-  MSALSignoutParams,
-  MSALResult,
-  IPublicClientApplication,
+import {
+  type MSALConfiguration,
+  type MSALInteractiveParams,
+  type MSALSilentParams,
+  type MSALAccount,
+  type MSALSignoutParams,
+  type MSALResult,
+  type IPublicClientApplication,
+  MSALPromptType,
 } from './types';
-import { MSALPromptType } from './types';
 
 export class PublicClientApplication implements IPublicClientApplication {
   private _pca: MSALPublicClientApplication;
