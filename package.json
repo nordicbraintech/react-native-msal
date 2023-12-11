@@ -1,23 +1,18 @@
 {
   "name": "react-native-msal",
-  "version": "1.0.3",
+  "version": "4.2.0",
   "description": "React Native wrapper for iOS and Android",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
-  "source": "src/index",
+  "main": "./index.js",
+  "types": "./main.d.ts",
+  "license": "Proprietary",
+  "repository": "https://github.com/nordicbraintech/react-native-msal",
+  "private": true,
   "scripts": {
-    "build": "expo-module build",
-    "clean": "expo-module clean",
-    "expo-module": "expo-module",
-    "lint": "expo-module lint",
-    "prepare": "expo-module prepare && husky install",
-    "prepublishOnly": "expo-module prepublishOnly",
-    "test": "expo-module test",
-    "example": "yarn --cwd example",
-    "pods": "cd example && npx pod-install",
-    "bootstrap": "yarn example && yarn && yarn pods",
-    "predeploy": "yarn example build:web",
-    "deploy": "gh-pages -d example/web-build"
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "npm run lint --fix",
+    "test": "npm run lint",
+    "prettier": "prettier --ignore-path .gitignore --no-config --write 'src/*.ts?(x)'",
+    "build": "tsc"
   },
   "keywords": [
     "react-native",
@@ -29,16 +24,7 @@
     "aad",
     "expo"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/stashenergy/react-native-msal.git"
-  },
-  "author": "Stash Energy <dev@stash.energy> (https://stash.energy)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/stashenergy/react-native-msal/issues"
-  },
-  "homepage": "https://github.com/stashenergy/react-native-msal#readme",
+  "author": "Athul Mithran, Stefan Borg, Marcus Engebretsen",
   "dependencies": {
     "@azure/msal-browser": "^2.1.0",
     "@expo/config-plugins": "^4.0.6"
@@ -53,7 +39,6 @@
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "expo-module-scripts": "^2.0.0",
     "gh-pages": "^3.1.0",
     "husky": "^7.0.0",
     "jest": "^27.0.6",

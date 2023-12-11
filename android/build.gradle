@@ -43,7 +43,10 @@ repositories {
   maven {
     // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
     url("$rootDir/../node_modules/react-native/android")
-  }
+    }
+  maven { 
+    //Fix for the new msal microsoft client
+    url 'https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1' }
   google()
   jcenter()
 }
@@ -51,5 +54,7 @@ repositories {
 dependencies {
   // noinspection GradleDynamicVersion
   implementation 'com.facebook.react:react-native:+' // From node_modules
-  implementation 'com.microsoft.identity.client:msal:2.2.+'
+  implementation('com.microsoft.identity.client:msal:4.8.1') {
+          exclude group: 'com.microsoft.device.display'
+  }
 }
